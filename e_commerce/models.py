@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Address(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
@@ -101,7 +102,7 @@ class Payment(models.Model):
 
 class User(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    fullnameid = models.ForeignKey(Fullname, models.DO_NOTHING, db_column='FullnameID')  # Field name made lowercase.
+    fullnameid = models.ForeignKey(Fullname, models.DO_NOTHING, db_column='FullnameID', blank=True, null=True)  # Field name made lowercase.
     username = models.CharField(db_column='Username', max_length=255, blank=True, null=True)  # Field name made lowercase.
     password = models.CharField(db_column='Password', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
