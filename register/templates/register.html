@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
-<title>Login LongCommerce</title>
+<title>Register LongCommerce</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -14,9 +14,19 @@
 </head>
 <body>
 <div class="signup-form">
-    <form action="/examples/actions/confirmation.php" method="post">
-		<h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+		<h2>Sign Up</h2>
+		<p>Please fill in this form to create an account!</p>
 		<hr>
+        {% if messages %}
+        {% for result in messages %}
+        <div class="alert alert-primary" role="alert">
+            Register Success!!!
+        </div>
+        {% endfor %}
+        {% endif %}
+
         <div class="form-group">
 			<div class="input-group">
 				<div class="input-group-prepend">
@@ -27,6 +37,7 @@
 				<input type="text" class="form-control" name="username" placeholder="Username" required="required">
 			</div>
         </div>
+
 		<div class="form-group">
 			<div class="input-group">
 				<div class="input-group-prepend">
@@ -37,18 +48,22 @@
 				<input type="password" class="form-control" name="password" placeholder="Password" required="required">
 			</div>
         </div>
+
+        <div class="form-group">
+			<label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
+		</div>
 		<div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg">Login </button>
+            <input type="submit" class="btn btn-primary btn-lg" value="Sign Up">
         </div>
     </form>
-    <div class="text-center">Don't have an account? <a href="../templates/index.html">Register here</a></div>
+	<div class="text-center">Already have an account? <a href="../templates/login.html">Login here</a></div>
 </div>
 </body>
 
 <style>
     body {
         color: #fff;
-        background: #194caa;
+        background: #19aa8d;
         font-family: 'Roboto', sans-serif;
     }
     .form-control {
@@ -99,7 +114,7 @@
     .signup-form .btn, .signup-form .btn:active {        
         font-size: 16px;
         font-weight: bold;
-        background: #194caa !important;
+        background: #19aa8d !important;
         border: none;
         min-width: 140px;
     }
