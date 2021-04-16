@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import User
+from e_commerce.models import User
 from django.contrib import messages
 
 # Create your views here.
