@@ -1,22 +1,125 @@
-use `ecommerce`;
+use `boec`;
 
-CREATE TABLE Address (ID int(10) NOT NULL AUTO_INCREMENT, UserID int(10) NOT NULL, City varchar(255), District varchar(255), Ward varchar(255), Description varchar(255), PRIMARY KEY (ID));
-CREATE TABLE Cart (ID int(10) NOT NULL AUTO_INCREMENT, UserID int(10) NOT NULL, PRIMARY KEY (ID));
-CREATE TABLE Cart_Item (CartID int(10) NOT NULL, ItemID int(10) NOT NULL, PRIMARY KEY (CartID, ItemID));
-CREATE TABLE Custom (ID int(10) NOT NULL AUTO_INCREMENT, UserID int(10) NOT NULL, Birthday date, Email varchar(255), Phonenumber varchar(255), PRIMARY KEY (ID));
-CREATE TABLE Fullname (ID int(10) NOT NULL AUTO_INCREMENT, FirstName varchar(255), LastName varchar(255), PRIMARY KEY (ID));
-CREATE TABLE Item (ID int(10) NOT NULL AUTO_INCREMENT, Name varchar(255), Image varchar(255), Description varchar(255), Price float, Quantity int(10), PRIMARY KEY (ID));
-CREATE TABLE `Order` (ID int(10) NOT NULL AUTO_INCREMENT, PaymentID int(10) NOT NULL, UserID int(10) NOT NULL, Total float, Discount float, PRIMARY KEY (ID));
-CREATE TABLE Order_Item (OrderID int(10) NOT NULL, ItemID int(10) NOT NULL, PRIMARY KEY (OrderID, ItemID));
-CREATE TABLE Payment (ID int(10) NOT NULL AUTO_INCREMENT, Name varchar(255), Description varchar(255), PRIMARY KEY (ID));
-CREATE TABLE `User` (ID int(10) NOT NULL AUTO_INCREMENT, FullnameID int(10) NOT NULL, Username varchar(255), Password varchar(255), PRIMARY KEY (ID));
-ALTER TABLE Custom ADD CONSTRAINT FKCustom230901 FOREIGN KEY (UserID) REFERENCES `User` (ID);
-ALTER TABLE Cart_Item ADD CONSTRAINT FKCart_Item220265 FOREIGN KEY (ItemID) REFERENCES Item (ID);
-ALTER TABLE Cart_Item ADD CONSTRAINT FKCart_Item904313 FOREIGN KEY (CartID) REFERENCES Cart (ID);
-ALTER TABLE Order_Item ADD CONSTRAINT FKOrder_Item101392 FOREIGN KEY (ItemID) REFERENCES Item (ID);
-ALTER TABLE Order_Item ADD CONSTRAINT FKOrder_Item365630 FOREIGN KEY (OrderID) REFERENCES `Order` (ID);
-ALTER TABLE `Order` ADD CONSTRAINT FKOrder92191 FOREIGN KEY (PaymentID) REFERENCES Payment (ID);
-ALTER TABLE `Order` ADD CONSTRAINT FKOrder63439 FOREIGN KEY (UserID) REFERENCES `User` (ID);
-ALTER TABLE Cart ADD CONSTRAINT FKCart424327 FOREIGN KEY (UserID) REFERENCES `User` (ID);
-ALTER TABLE Address ADD CONSTRAINT FKAddress555440 FOREIGN KEY (UserID) REFERENCES `User` (ID);
-ALTER TABLE `User` ADD CONSTRAINT FKUser481364 FOREIGN KEY (FullnameID) REFERENCES Fullname (ID);
+CREATE TABLE Address (
+ID int(10) NOT NULL AUTO_INCREMENT,
+City varchar(255), 
+District varchar(255),
+Ward varchar(255), 
+`Description` varchar(255),
+PRIMARY KEY (ID));
+
+CREATE TABLE Fullname (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+FirstName varchar(255), 
+LastName varchar(255), 
+PRIMARY KEY (ID));
+
+CREATE TABLE `Account` (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+Username varchar(255), 
+`Password` varchar(255),
+`Role` varchar(255),
+PRIMARY KEY (ID));
+
+CREATE TABLE Customer (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+email varchar(255), 
+tel varchar(11),
+AccountID int(10) ,
+FullnameID int(10) ,
+AddressID int(10) ,
+foreign key (AccountID) references `Account`(id),
+foreign key (FullnameID) references Fullname(id),
+foreign key (AddressID) references Address(id),
+PRIMARY KEY (ID));
+
+create table Cart (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+price float(10),
+PRIMARY KEY (ID));
+
+create table Product (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+product_name varchar(255), 
+product_type varchar(255), 
+image varchar(255),
+quantity int(10),
+price float(10),
+public boolean,
+PRIMARY KEY (ID));
+
+create table Item (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+quantity int(10),
+price float(10),
+`status` boolean,
+CartID int(10),
+ProductID int(10),
+foreign key (CartID) references Cart(id),
+foreign key (ProductID) references Product(id),
+PRIMARY KEY (ID));
+
+create table `Comment`(
+ID int(10)  NOT NULL AUTO_INCREMENT, 
+Descrip varchar(255),
+ItemID int(10),
+foreign key (ItemID) references Item(id),
+PRIMARY KEY (ID));
+
+create table Rating(
+ID int(10)  NOT NULL AUTO_INCREMENT, 
+Star int(10),
+ItemID int(10),
+foreign key (ItemID) references Item(id),
+PRIMARY KEY (ID));
+
+create table ProductRating (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+RatingID int(10),
+ProductID int(10),
+foreign key (RatingID) references Rating(id),
+foreign key (ProductID) references Product(id),
+PRIMARY KEY (ID));
+
+create table Payment (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+price float(10),
+payment_type varchar(255), 
+PRIMARY KEY (ID));
+
+create table Shipment (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+fee float(10),
+shipment_type varchar(255), 
+AddressID int(10),
+foreign key (AddressID) references Address(id),
+PRIMARY KEY (ID));
+
+create table `Order` (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+status varchar(255),
+CustomerID int(10),
+CartID int(10),
+PaymentID int(10),
+ShipmentID int(10),
+foreign key (CustomerID) references Customer(id),
+foreign key (CartID) references Cart(id),
+foreign key (PaymentID) references Payment(id),
+foreign key (ShipmentID) references Shipment(id),
+PRIMARY KEY (ID));
+
+CREATE TABLE Employee (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+`name` varchar(255), 
+position varchar(11),
+AccountID int(10) ,
+foreign key (AccountID) references `Account`(id),
+PRIMARY KEY (ID));
+
+create table OrderProcess (
+ID int(10) NOT NULL AUTO_INCREMENT, 
+EmployeeID int(10),
+OrderID int(10),
+foreign key (EmployeeID) references Employee(id),
+foreign key (OrderID) references `Order`(id),
+PRIMARY KEY (ID));
