@@ -63,7 +63,33 @@ body {
 </div>
 
 <div class="main">
-    <a class="btn btn-secondary" href="product/add" role="button"><i class="fa fa-plus"></i> Add product</a>
+    <a class="btn btn-secondary" href="product/add" role="button" style="margin: 10px;"><i class="fa fa-plus"></i> Add product</a>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Product name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Type</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <th scope="row">{{product.id}}</th>
+          <td>{{product.product_name}}</td>
+          <td>{{product.price}}</td>
+          <td>{{product.product_type}}</td>
+          <td>{{product.quantity}}</td>
+          <td>edit</td>
+          <td>delete</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

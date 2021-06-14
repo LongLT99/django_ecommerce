@@ -1,10 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from e_commerce.models import Account, Employee
-from e_commerce.models import Customer
-from e_commerce.models import Fullname
-from e_commerce.models import Address
-
+from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product
 
 # Create your views here.
 def register(request):
@@ -65,7 +61,7 @@ def login(request):
                 request.session['user_id'] = user.get().id
                 return redirect('../employee')
             else:
-                return redirect('../')
+                return redirect('../homepage')
         return render(request, "login.html")
     else:
         return render(request, "login.html")
@@ -85,8 +81,33 @@ def admin(request):
 
 
 def product(request):
-    return render(request, "admin/product.html")
+    all_product = Product.objects.all()
+    for _product in all_product:
+        print(_product.product_name)
+    return render(request, "admin/product.html", {'products': all_product})
 
 
 def add_product(request):
-    return render(request, "admin/add_product.html")
+    if request.method == 'POST':
+        if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
+            saveproduct = Product()
+            saveproduct.product_name = request.POST.get('product_name')
+            saveproduct.quantity = request.POST.get('quantity')
+            saveproduct.product_type = request.POST.get('product_type')
+            saveproduct.price = request.POST.get('price')
+            saveproduct.image = request.POST.get('image_url')
+            if(request.POST.get('publicCheck') =='on'):
+                saveproduct.public = 1
+            else:
+                saveproduct.public = 0
+            saveproduct.save()
+            print(request.POST.get('product_name'))
+            messages.success(request, "Success")
+            return render(request, "admin/add_product.html")
+
+    else:
+        return render(request, "admin/add_product.html")
+
+
+def customer(request):
+    return render(request, "customer/index.html")
