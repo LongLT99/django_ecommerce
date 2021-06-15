@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product
+from e_commerce.models import Cart, Item
+
 
 # Create your views here.
 def register(request):
@@ -114,3 +116,43 @@ def customer(request):
     else:
         return render(request, "customer/index.html")
 
+def addtocart(request,id):
+    #get Item
+    get_product = Product.objects.filter(id=id)
+    product = get_product.get()
+    #get Customer
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    get_customer = Customer.objects.filter(accountid = account)
+    current_customer = get_customer.get()
+    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer).count()
+    if(get_cart==0):
+        savecart = Cart()
+        savecart.price = product.price
+        savecart.status="onhold"
+        savecart.customerid = current_customer
+        savecart.save()
+        new_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        saveitem = Item()
+        saveitem.quantity = 1
+        saveitem.price = new_cart.price
+        saveitem.productid = product
+        saveitem.cartid =new_cart
+        saveitem.save()
+        messages.success(request, "Success")
+        return redirect('../homepage')
+    else:
+        current_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        current_cart.price = product.price + current_cart.price
+        current_cart.status="onhold"
+        current_cart.customerid = current_customer
+        current_cart.save()
+        new_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        saveitem = Item()
+        saveitem.quantity = 1
+        saveitem.price = product.price
+        saveitem.productid = product
+        saveitem.cartid =new_cart
+        saveitem.save()
+        messages.success(request, "Success")
+        return redirect('../homepage')

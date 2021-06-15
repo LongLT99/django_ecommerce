@@ -1,3 +1,5 @@
+CREATE SCHEMA `boec` ;
+
 use `boec`;
 
 CREATE TABLE Address (
@@ -36,6 +38,9 @@ PRIMARY KEY (ID));
 create table Cart (
 ID int(10) NOT NULL AUTO_INCREMENT, 
 price float(10),
+CustomerID int(10),
+`status` varchar(255),
+foreign key (CustomerID) references Customer(id),
 PRIMARY KEY (ID));
 
 create table Product (
@@ -98,11 +103,9 @@ PRIMARY KEY (ID));
 create table `Order` (
 ID int(10) NOT NULL AUTO_INCREMENT, 
 status varchar(255),
-CustomerID int(10),
 CartID int(10),
 PaymentID int(10),
 ShipmentID int(10),
-foreign key (CustomerID) references Customer(id),
 foreign key (CartID) references Cart(id),
 foreign key (PaymentID) references Payment(id),
 foreign key (ShipmentID) references Shipment(id),
@@ -123,3 +126,15 @@ OrderID int(10),
 foreign key (EmployeeID) references Employee(id),
 foreign key (OrderID) references `Order`(id),
 PRIMARY KEY (ID));
+
+INSERT INTO `boec`.`account` (`Username`, `Password`, `Role`) VALUES ('admin', '123456', '0');
+INSERT INTO `boec`.`account` (`Username`, `Password`, `Role`) VALUES ('newguy', '123456', '1');
+
+INSERT INTO `boec`.`fullname` (`FirstName`, `LastName`) VALUES ('Tran', 'Dan');
+INSERT INTO `boec`.`address` (`City`, `District`, `Ward`, `Description`) VALUES ('Ha noi', 'Ha Dong ', 'Duong noi', 'so 100');
+INSERT INTO `boec`.`customer` (`email`, `tel`, `AccountID`, `FullnameID`, `AddressID`) VALUES ('long@mail.com', '0987654321', '2', '1', '1');
+
+INSERT INTO `boec`.`employee` (`name`, `position`, `AccountID`) VALUES ('Nguyen Tuan', 'admin', '1');
+
+INSERT INTO `boec`.`product` (`product_name`, `product_type`, `image`, `quantity`, `price`, `public`) VALUES ('Harry Potter và hòn đá phù thủy', 'Book', 'https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/n/x/nxbtre_thumb_21542017_035423.jpg', '100', '108000', '1');
+INSERT INTO `boec`.`product` (`product_name`, `product_type`, `image`, `quantity`, `price`, `public`) VALUES ('Harry Potter và căn phòng chứa bí mật', 'Book', 'https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/n/x/nxbtre_thumb_21472017_034753.jpg', '80', '	119250', '1');
