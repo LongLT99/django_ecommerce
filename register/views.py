@@ -156,3 +156,17 @@ def addtocart(request,id):
         saveitem.save()
         messages.success(request, "Success")
         return redirect('../homepage')
+
+
+def cart(request):
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    get_customer = Customer.objects.filter(accountid = account)
+    current_customer = get_customer.get()
+    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
+    if(get_cart.count()!=0):
+        get_items=Item.objects.filter(cartid=get_cart.get())
+        get_products =[]                
+        return render(request, "customer/cart.html", {'items': get_items, 'mycart':get_cart.get()})
+    else:
+        return render(request, "customer/cart.html")

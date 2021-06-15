@@ -16,4 +16,5 @@ urlpatterns = [
      #customer
      path('homepage/', views.customer, name='customer'),
      path('addtocart/<int:id>', views.addtocart, name="addtocart"),
+     path('cart/', views.cart, name="cart")
 ]
