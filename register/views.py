@@ -61,6 +61,7 @@ def login(request):
                 request.session['user_id'] = user.get().id
                 return redirect('../employee')
             else:
+                request.session['user_id'] = user.get().id
                 return redirect('../homepage')
         return render(request, "login.html")
     else:
@@ -82,8 +83,6 @@ def admin(request):
 
 def product(request):
     all_product = Product.objects.all()
-    for _product in all_product:
-        print(_product.product_name)
     return render(request, "admin/product.html", {'products': all_product})
 
 
@@ -101,7 +100,6 @@ def add_product(request):
             else:
                 saveproduct.public = 0
             saveproduct.save()
-            print(request.POST.get('product_name'))
             messages.success(request, "Success")
             return render(request, "admin/add_product.html")
 
@@ -110,4 +108,9 @@ def add_product(request):
 
 
 def customer(request):
-    return render(request, "customer/index.html")
+    all_product = Product.objects.filter(public=1)
+    if(all_product.count()!=0):
+        return render(request, "customer/index.html", {'products': all_product})
+    else:
+        return render(request, "customer/index.html")
+

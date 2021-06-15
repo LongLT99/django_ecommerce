@@ -65,6 +65,11 @@
 <div class="main">
     <div class="container">
         <h1>Add product</h1>
+        {% if messages %}
+        <div class="alert alert-primary" role="alert">
+            Add product Success!!!
+        </div>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             <div class="form-row">
