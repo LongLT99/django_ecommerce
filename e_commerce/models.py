@@ -101,6 +101,7 @@ class Item(models.Model):
 
 class Order(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    price = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=255, blank=True, null=True)
     cartid = models.ForeignKey(Cart, models.DO_NOTHING, db_column='CartID', blank=True, null=True)  # Field name made lowercase.
     paymentid = models.ForeignKey('Payment', models.DO_NOTHING, db_column='PaymentID', blank=True, null=True)  # Field name made lowercase.

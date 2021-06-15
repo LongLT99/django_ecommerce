@@ -101,7 +101,8 @@ foreign key (AddressID) references Address(id),
 PRIMARY KEY (ID));
 
 create table `Order` (
-ID int(10) NOT NULL AUTO_INCREMENT, 
+ID int(10) NOT NULL AUTO_INCREMENT,
+price float(10),
 status varchar(255),
 CartID int(10),
 PaymentID int(10),

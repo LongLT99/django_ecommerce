@@ -16,5 +16,6 @@ urlpatterns = [
      #customer
      path('homepage/', views.customer, name='customer'),
      path('addtocart/<int:id>', views.addtocart, name="addtocart"),
-     path('cart/', views.cart, name="cart")
+     path('cart/', views.cart, name="cart"),
+     path('confirm/', views.confirm, name="confirm"),
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product
-from e_commerce.models import Cart, Item
+from e_commerce.models import Cart, Item, Payment, Shipment, Order
 
 
 # Create your views here.
@@ -12,17 +12,12 @@ def register(request):
             savefullname.firstname = request.POST.get('firstName')
             savefullname.lastname = request.POST.get('lastName')
             savefullname.save()
-            new_name = Fullname.objects.filter(firstname=savefullname.firstname, lastname=savefullname.lastname)
-            FullnameID = new_name.get()
 
             saveuser = Account()
             saveuser.username = request.POST.get('username')
             saveuser.password = request.POST.get('password')
             saveuser.role = 1
             saveuser.save()
-
-            new_user = Account.objects.filter(username=saveuser.username, password=saveuser.password)
-            userid = new_user.get()
 
             saveaddress = Address()
             saveaddress.city = request.POST.get('city')
@@ -31,14 +26,10 @@ def register(request):
             saveaddress.description = request.POST.get('description')
             saveaddress.save()
 
-            newaddress = Address.objects.filter(city=saveaddress.city, district=saveaddress.district,
-                                                description=saveaddress.description)
-            addressid = newaddress.get()
-
             savecustomer = Customer()
-            savecustomer.accountid = userid
-            savecustomer.fullnameid = FullnameID
-            savecustomer.addressid = addressid
+            savecustomer.accountid = saveuser
+            savecustomer.fullnameid = savefullname
+            savecustomer.addressid = saveaddress
             savecustomer.email = request.POST.get('email')
             savecustomer.tel = request.POST.get('tel')
             savecustomer.save()
@@ -165,8 +156,54 @@ def cart(request):
     current_customer = get_customer.get()
     get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
     if(get_cart.count()!=0):
-        get_items=Item.objects.filter(cartid=get_cart.get())
-        get_products =[]                
+        get_items=Item.objects.filter(cartid=get_cart.get())            
         return render(request, "customer/cart.html", {'items': get_items, 'mycart':get_cart.get()})
     else:
         return render(request, "customer/cart.html")
+
+
+def confirm(request):
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    get_customer = Customer.objects.filter(accountid = account)
+    current_customer = get_customer.get()
+    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
+    my_cart = get_cart.get()
+    if request.method == 'POST':
+        print(request.POST.get('checkPayment'))
+        print(request.POST.get('checkShipment'))
+        # save payment
+        savepayment = Payment()
+        if request.POST.get('checkPayment') == "pay1":
+            savepayment.payment_type = "thanh toán bằng thẻ"
+        else:
+            savepayment.payment_type = "thanh toán khi nhận hàng"
+        savepayment.price = my_cart.price
+        savepayment.save()
+
+        saveshipment = Shipment()
+        if request.POST.get('checkShipment') == "ship1":
+            saveshipment.shipment_type = "giao hàng nhanh"
+            saveshipment.fee = 25000
+        else:
+            saveshipment.shipment_type = "giao hàng tiêu chuẩn"
+            saveshipment.fee = 0
+        saveshipment.addressid = current_customer.addressid
+        saveshipment.save()
+
+        saveorder = Order()
+        saveorder.price = saveshipment.fee + my_cart.price
+        saveorder.status = "chờ xác nhận"
+        saveorder.cartid = my_cart
+        saveorder.paymentid = savepayment
+        saveorder.shipmentid = saveshipment
+        saveorder.save()
+        # update cart
+        my_cart.status = "wait"
+        my_cart.save()
+        get_items=Item.objects.filter(cartid=my_cart)              
+        return render(request, "customer/index.html")
+    else:
+        get_items=Item.objects.filter(cartid=my_cart) 
+        return render(request, "customer/confirm.html", {'items': get_items, 'mycart':get_cart.get()})
+    
