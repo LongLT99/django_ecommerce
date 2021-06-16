@@ -9,10 +9,17 @@ from django.db import models
 
 
 class Account(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    username = models.CharField(db_column='Username', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    password = models.CharField(db_column='Password', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    role = models.CharField(db_column='Role', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    username = models.CharField(
+        db_column='Username', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    password = models.CharField(
+        db_column='Password', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    role = models.CharField(
+        db_column='Role', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -20,11 +27,20 @@ class Account(models.Model):
 
 
 class Address(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    city = models.CharField(db_column='City', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    district = models.CharField(db_column='District', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    ward = models.CharField(db_column='Ward', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    description = models.CharField(db_column='Description', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    city = models.CharField(
+        db_column='City', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    district = models.CharField(
+        db_column='District', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    ward = models.CharField(
+        db_column='Ward', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    description = models.CharField(
+        db_column='Description', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -32,9 +48,12 @@ class Address(models.Model):
 
 
 class Cart(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     price = models.FloatField(blank=True, null=True)
-    customerid = models.ForeignKey('Customer', models.DO_NOTHING, db_column='CustomerID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    customerid = models.ForeignKey(
+        'Customer', models.DO_NOTHING, db_column='CustomerID', blank=True, null=True)
     status = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -43,9 +62,14 @@ class Cart(models.Model):
 
 
 class Comment(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    descrip = models.CharField(db_column='Descrip', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    itemid = models.ForeignKey('Item', models.DO_NOTHING, db_column='ItemID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    descrip = models.CharField(
+        db_column='Descrip', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    itemid = models.ForeignKey(
+        'Item', models.DO_NOTHING, db_column='ItemID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -53,12 +77,19 @@ class Comment(models.Model):
 
 
 class Customer(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     tel = models.CharField(max_length=11, blank=True, null=True)
-    accountid = models.ForeignKey(Account, models.DO_NOTHING, db_column='AccountID', blank=True, null=True)  # Field name made lowercase.
-    fullnameid = models.ForeignKey('Fullname', models.DO_NOTHING, db_column='FullnameID', blank=True, null=True)  # Field name made lowercase.
-    addressid = models.ForeignKey(Address, models.DO_NOTHING, db_column='AddressID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    accountid = models.ForeignKey(
+        Account, models.DO_NOTHING, db_column='AccountID', blank=True, null=True)
+    # Field name made lowercase.
+    fullnameid = models.ForeignKey(
+        'Fullname', models.DO_NOTHING, db_column='FullnameID', blank=True, null=True)
+    # Field name made lowercase.
+    addressid = models.ForeignKey(
+        Address, models.DO_NOTHING, db_column='AddressID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -66,10 +97,13 @@ class Customer(models.Model):
 
 
 class Employee(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     position = models.CharField(max_length=11, blank=True, null=True)
-    accountid = models.ForeignKey(Account, models.DO_NOTHING, db_column='AccountID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    accountid = models.ForeignKey(
+        Account, models.DO_NOTHING, db_column='AccountID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -77,9 +111,14 @@ class Employee(models.Model):
 
 
 class Fullname(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    firstname = models.CharField(
+        db_column='FirstName', max_length=255, blank=True, null=True)
+    # Field name made lowercase.
+    lastname = models.CharField(
+        db_column='LastName', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -87,12 +126,17 @@ class Fullname(models.Model):
 
 
 class Item(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     quantity = models.IntegerField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
     status = models.IntegerField(blank=True, null=True)
-    cartid = models.ForeignKey(Cart, models.DO_NOTHING, db_column='CartID', blank=True, null=True)  # Field name made lowercase.
-    productid = models.ForeignKey('Product', models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    cartid = models.ForeignKey(
+        Cart, models.DO_NOTHING, db_column='CartID', blank=True, null=True)
+    # Field name made lowercase.
+    productid = models.ForeignKey(
+        'Product', models.DO_NOTHING, db_column='ProductID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -100,12 +144,19 @@ class Item(models.Model):
 
 
 class Order(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     price = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=255, blank=True, null=True)
-    cartid = models.ForeignKey(Cart, models.DO_NOTHING, db_column='CartID', blank=True, null=True)  # Field name made lowercase.
-    paymentid = models.ForeignKey('Payment', models.DO_NOTHING, db_column='PaymentID', blank=True, null=True)  # Field name made lowercase.
-    shipmentid = models.ForeignKey('Shipment', models.DO_NOTHING, db_column='ShipmentID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    cartid = models.ForeignKey(
+        Cart, models.DO_NOTHING, db_column='CartID', blank=True, null=True)
+    # Field name made lowercase.
+    paymentid = models.ForeignKey(
+        'Payment', models.DO_NOTHING, db_column='PaymentID', blank=True, null=True)
+    # Field name made lowercase.
+    shipmentid = models.ForeignKey(
+        'Shipment', models.DO_NOTHING, db_column='ShipmentID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -113,9 +164,14 @@ class Order(models.Model):
 
 
 class Orderprocess(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    employeeid = models.ForeignKey(Employee, models.DO_NOTHING, db_column='EmployeeID', blank=True, null=True)  # Field name made lowercase.
-    orderid = models.ForeignKey(Order, models.DO_NOTHING, db_column='OrderID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    employeeid = models.ForeignKey(
+        Employee, models.DO_NOTHING, db_column='EmployeeID', blank=True, null=True)
+    # Field name made lowercase.
+    orderid = models.ForeignKey(
+        Order, models.DO_NOTHING, db_column='OrderID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -123,7 +179,8 @@ class Orderprocess(models.Model):
 
 
 class Payment(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     price = models.FloatField(blank=True, null=True)
     payment_type = models.CharField(max_length=255, blank=True, null=True)
 
@@ -133,7 +190,8 @@ class Payment(models.Model):
 
 
 class Product(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     product_name = models.CharField(max_length=255, blank=True, null=True)
     product_type = models.CharField(max_length=255, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
@@ -147,9 +205,14 @@ class Product(models.Model):
 
 
 class Productrating(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    ratingid = models.ForeignKey('Rating', models.DO_NOTHING, db_column='RatingID', blank=True, null=True)  # Field name made lowercase.
-    productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    ratingid = models.ForeignKey(
+        'Rating', models.DO_NOTHING, db_column='RatingID', blank=True, null=True)
+    # Field name made lowercase.
+    productid = models.ForeignKey(
+        Product, models.DO_NOTHING, db_column='ProductID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -157,9 +220,13 @@ class Productrating(models.Model):
 
 
 class Rating(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    star = models.IntegerField(db_column='Star', blank=True, null=True)  # Field name made lowercase.
-    itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='ItemID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    # Field name made lowercase.
+    star = models.IntegerField(db_column='Star', blank=True, null=True)
+    # Field name made lowercase.
+    itemid = models.ForeignKey(
+        Item, models.DO_NOTHING, db_column='ItemID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -167,10 +234,13 @@ class Rating(models.Model):
 
 
 class Shipment(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
     fee = models.FloatField(blank=True, null=True)
     shipment_type = models.CharField(max_length=255, blank=True, null=True)
-    addressid = models.ForeignKey(Address, models.DO_NOTHING, db_column='AddressID', blank=True, null=True)  # Field name made lowercase.
+    # Field name made lowercase.
+    addressid = models.ForeignKey(
+        Address, models.DO_NOTHING, db_column='AddressID', blank=True, null=True)
 
     class Meta:
         managed = False

@@ -45,7 +45,8 @@ def login(request):
     if request.method == 'POST':
         get_user = Account.objects.filter(username=request.POST.get('username'),
                                           password=request.POST.get('password')).count()
-        user = Account.objects.filter(username=request.POST.get('username'), password=request.POST.get('password'))
+        user = Account.objects.filter(username=request.POST.get(
+            'username'), password=request.POST.get('password'))
         if get_user == 0:
             messages.success(request, "Fail")
         else:
@@ -63,6 +64,8 @@ def login(request):
 
 def homepage(request):
     return render(request, "homepage.html")
+
+# Employee role
 
 
 def admin(request):
@@ -88,7 +91,7 @@ def add_product(request):
             saveproduct.product_type = request.POST.get('product_type')
             saveproduct.price = request.POST.get('price')
             saveproduct.image = request.POST.get('image_url')
-            if(request.POST.get('publicCheck') =='on'):
+            if(request.POST.get('publicCheck') == 'on'):
                 saveproduct.public = 1
             else:
                 saveproduct.public = 0
@@ -100,50 +103,61 @@ def add_product(request):
         return render(request, "admin/add_product.html")
 
 
+def admin_order(request):
+    all_order = Order.objects.all()
+    return render(request, "admin/adminorder.html", {'orders': all_order})
+
+
+# Customer role
 def customer(request):
     all_product = Product.objects.filter(public=1)
-    if(all_product.count()!=0):
+    if(all_product.count() != 0):
         return render(request, "customer/index.html", {'products': all_product})
     else:
         return render(request, "customer/index.html")
 
-def addtocart(request,id):
-    #get Item
+
+def addtocart(request, id):
+    # get Item
     get_product = Product.objects.filter(id=id)
     product = get_product.get()
-    #get Customer
+    # get Customer
     get_account = Account.objects.filter(id=request.session['user_id'])
     account = get_account.get()
-    get_customer = Customer.objects.filter(accountid = account)
+    get_customer = Customer.objects.filter(accountid=account)
     current_customer = get_customer.get()
-    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer).count()
-    if(get_cart==0):
+    get_cart = Cart.objects.filter(
+        status="onhold", customerid=current_customer).count()
+    if(get_cart == 0):
         savecart = Cart()
         savecart.price = product.price
-        savecart.status="onhold"
+        savecart.status = "onhold"
         savecart.customerid = current_customer
         savecart.save()
-        new_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        new_cart = Cart.objects.filter(
+            status="onhold", customerid=current_customer).get()
         saveitem = Item()
         saveitem.quantity = 1
         saveitem.price = new_cart.price
         saveitem.productid = product
-        saveitem.cartid =new_cart
+        saveitem.cartid = new_cart
         saveitem.save()
         messages.success(request, "Success")
         return redirect('../homepage')
     else:
-        current_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        current_cart = Cart.objects.filter(
+            status="onhold", customerid=current_customer).get()
         current_cart.price = product.price + current_cart.price
-        current_cart.status="onhold"
+        current_cart.status = "onhold"
         current_cart.customerid = current_customer
         current_cart.save()
-        new_cart = Cart.objects.filter(status="onhold", customerid = current_customer).get()
+        new_cart = Cart.objects.filter(
+            status="onhold", customerid=current_customer).get()
         saveitem = Item()
         saveitem.quantity = 1
         saveitem.price = product.price
         saveitem.productid = product
-        saveitem.cartid =new_cart
+        saveitem.cartid = new_cart
         saveitem.save()
         messages.success(request, "Success")
         return redirect('../homepage')
@@ -152,12 +166,13 @@ def addtocart(request,id):
 def cart(request):
     get_account = Account.objects.filter(id=request.session['user_id'])
     account = get_account.get()
-    get_customer = Customer.objects.filter(accountid = account)
+    get_customer = Customer.objects.filter(accountid=account)
     current_customer = get_customer.get()
-    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
-    if(get_cart.count()!=0):
-        get_items=Item.objects.filter(cartid=get_cart.get())            
-        return render(request, "customer/cart.html", {'items': get_items, 'mycart':get_cart.get()})
+    get_cart = Cart.objects.filter(
+        status="onhold", customerid=current_customer)
+    if(get_cart.count() != 0):
+        get_items = Item.objects.filter(cartid=get_cart.get())
+        return render(request, "customer/cart.html", {'items': get_items, 'mycart': get_cart.get()})
     else:
         return render(request, "customer/cart.html")
 
@@ -165,10 +180,11 @@ def cart(request):
 def confirm(request):
     get_account = Account.objects.filter(id=request.session['user_id'])
     account = get_account.get()
-    get_customer = Customer.objects.filter(accountid = account)
+    get_customer = Customer.objects.filter(accountid=account)
     current_customer = get_customer.get()
-    get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
-    if(get_cart.count()==0):
+    get_cart = Cart.objects.filter(
+        status="onhold", customerid=current_customer)
+    if(get_cart.count() == 0):
         return redirect("../homepage")
     if request.method == 'POST':
         my_cart = get_cart.get()
@@ -201,29 +217,29 @@ def confirm(request):
         # update cart
         my_cart.status = "wait"
         my_cart.save()
-        get_items=Item.objects.filter(cartid=my_cart)              
+        get_items = Item.objects.filter(cartid=my_cart)
         return redirect("../order")
     else:
-        get_items=Item.objects.filter(cartid=get_cart.get()) 
-        return render(request, "customer/confirm.html", {'items': get_items, 'mycart':get_cart.get()})
+        get_items = Item.objects.filter(cartid=get_cart.get())
+        return render(request, "customer/confirm.html", {'items': get_items, 'mycart': get_cart.get()})
 
 
 def order(request):
     get_account = Account.objects.filter(id=request.session['user_id'])
     account = get_account.get()
-    get_customer = Customer.objects.filter(accountid = account)
+    get_customer = Customer.objects.filter(accountid=account)
     current_customer = get_customer.get()
-    get_carts = Cart.objects.filter(customerid = current_customer)
-    list_order=[]
+    get_carts = Cart.objects.filter(customerid=current_customer)
+    list_order = []
     for cart in get_carts:
-        get_order = Order.objects.filter(cartid = cart).get()
+        get_order = Order.objects.filter(cartid=cart).get()
         list_order.append(get_order)
-        
+
     return render(request, "customer/order.html", {'orders': list_order})
 
 
-def orderdetail(request,id):
+def orderdetail(request, id):
     get_order = Order.objects.filter(id=id).get()
     get_cart = get_order.cartid
-    get_items = Item.objects.filter(cartid = get_cart)
+    get_items = Item.objects.filter(cartid=get_cart)
     return render(request, "customer/orderdetail.html", {'items': get_items, 'order': get_order})
