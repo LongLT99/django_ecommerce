@@ -168,10 +168,10 @@ def confirm(request):
     get_customer = Customer.objects.filter(accountid = account)
     current_customer = get_customer.get()
     get_cart = Cart.objects.filter(status="onhold",customerid = current_customer)
-    my_cart = get_cart.get()
+    if(get_cart.count()==0):
+        return redirect("../homepage")
     if request.method == 'POST':
-        print(request.POST.get('checkPayment'))
-        print(request.POST.get('checkShipment'))
+        my_cart = get_cart.get()
         # save payment
         savepayment = Payment()
         if request.POST.get('checkPayment') == "pay1":
@@ -202,8 +202,28 @@ def confirm(request):
         my_cart.status = "wait"
         my_cart.save()
         get_items=Item.objects.filter(cartid=my_cart)              
-        return render(request, "customer/index.html")
+        return redirect("../order")
     else:
-        get_items=Item.objects.filter(cartid=my_cart) 
+        get_items=Item.objects.filter(cartid=get_cart.get()) 
         return render(request, "customer/confirm.html", {'items': get_items, 'mycart':get_cart.get()})
-    
+
+
+def order(request):
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    get_customer = Customer.objects.filter(accountid = account)
+    current_customer = get_customer.get()
+    get_carts = Cart.objects.filter(customerid = current_customer)
+    list_order=[]
+    for cart in get_carts:
+        get_order = Order.objects.filter(cartid = cart).get()
+        list_order.append(get_order)
+        
+    return render(request, "customer/order.html", {'orders': list_order})
+
+
+def orderdetail(request,id):
+    get_order = Order.objects.filter(id=id).get()
+    get_cart = get_order.cartid
+    get_items = Item.objects.filter(cartid = get_cart)
+    return render(request, "customer/orderdetail.html", {'items': get_items, 'order': get_order})

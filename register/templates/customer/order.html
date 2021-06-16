@@ -23,7 +23,7 @@
               <a class="nav-link" href="../homepage">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="../order">My Order <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="../order">My Order <span class="sr-only">(current)</span></a>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
@@ -33,41 +33,27 @@
         </div>
       </nav>
       <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="section-title">
-                <h2>Danh sách sản phẩm</h2>
-              </div>
-              <div class="featured__controls">
-                <ul>
-                  <button class="btn active" onclick="filterSelection('all')">All</button>
-                  <button class="btn" onclick="filterSelection('lk')">Book</button>
-                  <button class="btn" onclick="filterSelection('pk')">Electronic</button>
-                  <button class="btn" onclick="filterSelection('pk')">Clothes</button>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- list san pham -->
-          <div class="row">
-            {% for product in products %}
-            <div class="col-lg-3 col-md-4 col-sm-6 filterDiv lk" >
-              <div class="card" id="xitem" style="margin: 5px;" >
-                <img class="card-img-top" src="{{product.image}}" style="height: 20rem;"
-                  alt="Card image cap">
-                <div class="card-body">
-                  <div class="featured__item ">
-                    <div class="featured__item__text" style="height: 100px;">
-                      <h6><a href="#">{{product.product_name}}</a></h6>
-                      <h5>{{product.price}} VNĐ</h5>
-                    </div>
-                    <a href="/addtocart/{{ product.id }}">Add to cart</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
+          <h3 style="margin: 10px;">Danh sách đặt hàng của tôi</h3>
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">tổng phí</th>
+                <th scope="col">Chi tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{order.id}}</th>
+                        <td>{{order.status}}</td>
+                        <td>{{order.price}}</td>
+                        <td><a href="/orderdetail/{{ order.id }}">Chi tiết</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
       </div>
     <footer class="footer">
         <div>

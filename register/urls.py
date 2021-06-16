@@ -18,4 +18,6 @@ urlpatterns = [
      path('addtocart/<int:id>', views.addtocart, name="addtocart"),
      path('cart/', views.cart, name="cart"),
      path('confirm/', views.confirm, name="confirm"),
+     path('order/', views.order, name="order"),
+     path('orderdetail/<int:id>', views.orderdetail, name="orderdetail"),
 ]
