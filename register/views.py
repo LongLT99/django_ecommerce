@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product
-from e_commerce.models import Cart, Item, Payment, Shipment, Order
+from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess
 
 
 # Create your views here.
@@ -106,6 +106,56 @@ def add_product(request):
 def admin_order(request):
     all_order = Order.objects.all()
     return render(request, "admin/adminorder.html", {'orders': all_order})
+
+
+def orderprocess(request,id):
+    get_order = Order.objects.filter(id=id).get()
+    get_cart = get_order.cartid
+    get_items = Item.objects.filter(cartid=get_cart)
+
+    user_id = request.session.get('user_id')
+    get_current_user = Account.objects.filter(id=user_id)
+    current_user = get_current_user.get()
+    get_employee = Employee.objects.filter(accountid=current_user)
+    employee = get_employee.get()
+
+    get_process = Orderprocess.objects.filter(employeeid=employee, orderid = get_order)
+    
+    if(get_process.count()==0):
+        if request.method == 'POST':
+            print("he"+ request.POST.get('order_status'))
+            saveprocess = Orderprocess()
+            saveprocess.employeeid = employee
+            saveprocess.orderid = get_order
+            saveprocess.save()
+
+            get_cart.status = request.POST.get('order_status')
+            get_cart.save()
+            get_order.status = request.POST.get('order_status')
+            get_order.save()
+            return redirect('../order' )
+        else:
+            return render(request, "admin/orderprocess.html", {'items': get_items, 'order': get_order, 'employee': employee})
+    else:
+        get_my_process = Orderprocess.objects.filter(employeeid=employee, orderid = get_order)
+        if get_my_process.count() != 0:
+            if request.method == 'POST':
+                print("he"+ request.POST.get('order_status'))
+                saveprocess = Orderprocess()
+                saveprocess.employeeid = employee
+                saveprocess.orderid = get_order
+                saveprocess.save()
+
+                get_cart.status = request.POST.get('order_status')
+                get_cart.save()
+                get_order.status = request.POST.get('order_status')
+                get_order.save()
+                return redirect('../order' )
+            else:
+                return render(request, "admin/orderprocess.html", {'items': get_items, 'order': get_order, 'employee': employee})
+        else:
+            return redirect('../order' )
+        
 
 
 # Customer role

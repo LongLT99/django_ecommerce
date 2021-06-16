@@ -13,6 +13,7 @@ urlpatterns = [
     path('employee/product', views.product, name='product'),
     path('employee/product/add', views.add_product, name='add_product'),
     path('employee/order', views.admin_order, name='admin_order'),
+    path('employee/orderprocess/<int:id>', views.orderprocess, name="orderprocess"),
 
     # customer
     path('homepage/', views.customer, name='customer'),
