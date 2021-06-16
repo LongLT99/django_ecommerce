@@ -282,8 +282,10 @@ def order(request):
     get_carts = Cart.objects.filter(customerid=current_customer)
     list_order = []
     for cart in get_carts:
-        get_order = Order.objects.filter(cartid=cart).get()
-        list_order.append(get_order)
+        if(cart.status!="onhold"):
+            get_order = Order.objects.filter(cartid=cart).get()
+            list_order.append(get_order)
+        
 
     return render(request, "customer/order.html", {'orders': list_order})
 
