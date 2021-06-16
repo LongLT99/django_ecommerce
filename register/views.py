@@ -295,3 +295,13 @@ def orderdetail(request, id):
     get_cart = get_order.cartid
     get_items = Item.objects.filter(cartid=get_cart)
     return render(request, "customer/orderdetail.html", {'items': get_items, 'order': get_order})
+
+
+def rating(request, id):
+    get_order = Order.objects.filter(id=id).get()
+    get_cart = get_order.cartid
+    get_items = Item.objects.filter(cartid=get_cart)
+    if get_order.status == "Đã hoàn thành":
+        return render(request, "customer/rating.html", {'items': get_items, 'order': get_order})
+    else:
+        return redirect('../order')

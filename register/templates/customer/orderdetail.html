@@ -269,8 +269,10 @@
                                 <hr>
                                 <div class="checkout__order__total">Tổng tiền <span>{{order.price}} đ</span></div>
                                 <hr>
-                                <h6><a href="/orderdetail/{{ order.id }}" class="btn btn-primary btn-lg active"
-                                        role="button" aria-pressed="true">Đánh giá sản phẩm</a></h6>
+                                {% if order.status == "Đã hoàn thành" %}
+                                <h6><a href="/rating/{{ order.id }}" class="btn btn-primary btn-lg active" role="button"
+                                        aria-pressed="true">Đánh giá sản phẩm</a></h6>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

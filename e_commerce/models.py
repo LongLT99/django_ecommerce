@@ -70,6 +70,9 @@ class Comment(models.Model):
     # Field name made lowercase.
     itemid = models.ForeignKey(
         'Item', models.DO_NOTHING, db_column='ItemID', blank=True, null=True)
+    # Field name made lowercase.
+    customerid = models.ForeignKey(
+        'Customer', models.DO_NOTHING, db_column='CustomerID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -227,6 +230,9 @@ class Rating(models.Model):
     # Field name made lowercase.
     itemid = models.ForeignKey(
         Item, models.DO_NOTHING, db_column='ItemID', blank=True, null=True)
+    # Field name made lowercase.
+    customerid = models.ForeignKey(
+        Customer, models.DO_NOTHING, db_column='CustomerID', blank=True, null=True)
 
     class Meta:
         managed = False

@@ -22,4 +22,5 @@ urlpatterns = [
     path('confirm/', views.confirm, name="confirm"),
     path('order/', views.order, name="order"),
     path('orderdetail/<int:id>', views.orderdetail, name="orderdetail"),
+    path('rating/<int:id>', views.rating, name="rating"),
 ]
