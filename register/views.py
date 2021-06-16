@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product
-from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess
+from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product, Rating
+from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess, Comment
 
 
 # Create your views here.
@@ -69,12 +69,15 @@ def homepage(request):
 
 
 def admin(request):
-    user_id = request.session.get('user_id')
-    get_current_user = Account.objects.filter(id=user_id)
-    current_user = get_current_user.get()
-    get_employee = Employee.objects.filter(accountid=current_user)
-    employee = get_employee.get()
-    return render(request, "admin/admin.html", {'employee': employee})
+    if request.session.get('user_id') is None:
+        return redirect('../login')
+    else:
+        user_id = request.session.get('user_id')
+        get_current_user = Account.objects.filter(id=user_id)
+        current_user = get_current_user.get()
+        get_employee = Employee.objects.filter(accountid=current_user)
+        employee = get_employee.get()
+        return render(request, "admin/admin.html", {'employee': employee})
 
 
 def product(request):
@@ -83,24 +86,27 @@ def product(request):
 
 
 def add_product(request):
-    if request.method == 'POST':
-        if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
-            saveproduct = Product()
-            saveproduct.product_name = request.POST.get('product_name')
-            saveproduct.quantity = request.POST.get('quantity')
-            saveproduct.product_type = request.POST.get('product_type')
-            saveproduct.price = request.POST.get('price')
-            saveproduct.image = request.POST.get('image_url')
-            if(request.POST.get('publicCheck') == 'on'):
-                saveproduct.public = 1
-            else:
-                saveproduct.public = 0
-            saveproduct.save()
-            messages.success(request, "Success")
-            return render(request, "admin/add_product.html")
-
+    if request.session.get('user_id') is None:
+        return redirect('../login')
     else:
-        return render(request, "admin/add_product.html")
+        if request.method == 'POST':
+            if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
+                saveproduct = Product()
+                saveproduct.product_name = request.POST.get('product_name')
+                saveproduct.quantity = request.POST.get('quantity')
+                saveproduct.product_type = request.POST.get('product_type')
+                saveproduct.price = request.POST.get('price')
+                saveproduct.image = request.POST.get('image_url')
+                if(request.POST.get('publicCheck') == 'on'):
+                    saveproduct.public = 1
+                else:
+                    saveproduct.public = 0
+                saveproduct.save()
+                messages.success(request, "Success")
+                return render(request, "admin/add_product.html")
+
+        else:
+            return render(request, "admin/add_product.html")
 
 
 def admin_order(request):
@@ -168,49 +174,52 @@ def customer(request):
 
 
 def addtocart(request, id):
-    # get Item
-    get_product = Product.objects.filter(id=id)
-    product = get_product.get()
-    # get Customer
-    get_account = Account.objects.filter(id=request.session['user_id'])
-    account = get_account.get()
-    get_customer = Customer.objects.filter(accountid=account)
-    current_customer = get_customer.get()
-    get_cart = Cart.objects.filter(
-        status="onhold", customerid=current_customer).count()
-    if(get_cart == 0):
-        savecart = Cart()
-        savecart.price = product.price
-        savecart.status = "onhold"
-        savecart.customerid = current_customer
-        savecart.save()
-        new_cart = Cart.objects.filter(
-            status="onhold", customerid=current_customer).get()
-        saveitem = Item()
-        saveitem.quantity = 1
-        saveitem.price = new_cart.price
-        saveitem.productid = product
-        saveitem.cartid = new_cart
-        saveitem.save()
-        messages.success(request, "Success")
-        return redirect('../homepage')
+    if request.session.get('user_id') is None:
+        return redirect('../login')
     else:
-        current_cart = Cart.objects.filter(
-            status="onhold", customerid=current_customer).get()
-        current_cart.price = product.price + current_cart.price
-        current_cart.status = "onhold"
-        current_cart.customerid = current_customer
-        current_cart.save()
-        new_cart = Cart.objects.filter(
-            status="onhold", customerid=current_customer).get()
-        saveitem = Item()
-        saveitem.quantity = 1
-        saveitem.price = product.price
-        saveitem.productid = product
-        saveitem.cartid = new_cart
-        saveitem.save()
-        messages.success(request, "Success")
-        return redirect('../homepage')
+        # get Item
+        get_product = Product.objects.filter(id=id)
+        product = get_product.get()
+        # get Customer
+        get_account = Account.objects.filter(id=request.session['user_id'])
+        account = get_account.get()
+        get_customer = Customer.objects.filter(accountid=account)
+        current_customer = get_customer.get()
+        get_cart = Cart.objects.filter(
+            status="onhold", customerid=current_customer).count()
+        if(get_cart == 0):
+            savecart = Cart()
+            savecart.price = product.price
+            savecart.status = "onhold"
+            savecart.customerid = current_customer
+            savecart.save()
+            new_cart = Cart.objects.filter(
+                status="onhold", customerid=current_customer).get()
+            saveitem = Item()
+            saveitem.quantity = 1
+            saveitem.price = new_cart.price
+            saveitem.productid = product
+            saveitem.cartid = new_cart
+            saveitem.save()
+            messages.success(request, "Success")
+            return redirect('../homepage')
+        else:
+            current_cart = Cart.objects.filter(
+                status="onhold", customerid=current_customer).get()
+            current_cart.price = product.price + current_cart.price
+            current_cart.status = "onhold"
+            current_cart.customerid = current_customer
+            current_cart.save()
+            new_cart = Cart.objects.filter(
+                status="onhold", customerid=current_customer).get()
+            saveitem = Item()
+            saveitem.quantity = 1
+            saveitem.price = product.price
+            saveitem.productid = product
+            saveitem.cartid = new_cart
+            saveitem.save()
+            messages.success(request, "Success")
+            return redirect('../homepage')
 
 
 def cart(request):
@@ -285,8 +294,6 @@ def order(request):
         if(cart.status!="onhold"):
             get_order = Order.objects.filter(cartid=cart).get()
             list_order.append(get_order)
-        
-
     return render(request, "customer/order.html", {'orders': list_order})
 
 
@@ -298,10 +305,33 @@ def orderdetail(request, id):
 
 
 def rating(request, id):
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    get_customer = Customer.objects.filter(accountid=account)
+    current_customer = get_customer.get()
     get_order = Order.objects.filter(id=id).get()
     get_cart = get_order.cartid
     get_items = Item.objects.filter(cartid=get_cart)
     if get_order.status == "Đã hoàn thành":
-        return render(request, "customer/rating.html", {'items': get_items, 'order': get_order})
+        if request.method == 'POST':
+            for item in get_items:
+                comment = str(item.id)+'comment'
+                rating = str(item.id)+'rating'
+                # Comment
+                savecomment = Comment()
+                savecomment.descrip = request.POST.get(comment)
+                savecomment.itemid = item
+                savecomment.customerid = current_customer
+                # Rating
+                saverating = Rating()
+                saverating.star = request.POST.get(rating)
+                saverating.itemid = item
+                saverating.customerid = current_customer
+                # save
+                savecomment.save()
+                saverating.save()
+            return redirect('../homepage')
+        else:
+            return render(request, "customer/rating.html", {'items': get_items, 'order': get_order})
     else:
         return redirect('../order')

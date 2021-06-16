@@ -68,6 +68,8 @@ create table `Comment`(
 ID int(10)  NOT NULL AUTO_INCREMENT, 
 Descrip varchar(255),
 ItemID int(10),
+CustomerID int(10),
+foreign key (CustomerID) references Customer(id),
 foreign key (ItemID) references Item(id),
 PRIMARY KEY (ID));
 
@@ -75,6 +77,8 @@ create table Rating(
 ID int(10)  NOT NULL AUTO_INCREMENT, 
 Star int(10),
 ItemID int(10),
+CustomerID int(10),
+foreign key (CustomerID) references Customer(id),
 foreign key (ItemID) references Item(id),
 PRIMARY KEY (ID));
 
