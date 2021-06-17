@@ -284,7 +284,8 @@
                                 <div class="checkout__order">
                                     <h4>Đơn hàng ID: {{order.id}}</h4>
                                     <h4>Nhân viên xử lý: {{employee.name}}</h4>
-                                    <label for="inputState">Trạng thái đơn hàng</label>
+                                    <h4>Trạng thái đơn hàng hiện tại: {{order.status}}</h4>
+                                    <p>Chuyển trạng thái:</p>
                                     <select id="inputState" class="form-control" name="order_status">
                                         <option selected value="Chờ xác nhận">Chờ xác nhận</option>
                                         <option value="Đang xử lý">Đang xử lý</option>

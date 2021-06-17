@@ -15,7 +15,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Long Commerce</a>
+    <a class="navbar-brand" href="../homepage">Long Commerce</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -24,7 +24,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="../homepage">Home <span class="sr-only">(current)</span></a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -33,8 +33,42 @@
       </form>
     </div>
   </nav>
-  <img src="https://www.apsfulfillment.com/wp-content/uploads/2017/10/order-fulfillment-service-for-ecommerce.jpg"
-    class="img-fluid" style="width: 100%; height: fit-content;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="section-title">
+          <h2>Danh sách sản phẩm</h2>
+        </div>
+        <div class="featured__controls">
+          <ul>
+            <button class="btn active" onclick="filterSelection('all')">All</button>
+            <button class="btn" onclick="filterSelection('lk')">Book</button>
+            <button class="btn" onclick="filterSelection('pk')">Electronic</button>
+            <button class="btn" onclick="filterSelection('pk')">Clothes</button>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- list san pham -->
+    <div class="row">
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6 filterDiv lk">
+        <div class="card" id="xitem" style="margin: 5px;">
+          <img class="card-img-top" src="{{product.image}}" style="height: 20rem;" alt="Card image cap">
+          <div class="card-body">
+            <div class="featured__item ">
+              <div class="featured__item__text" style="height: 100px;">
+                <h6><a href="/productdetail/{{ product.id }}">{{product.product_name}}</a></h6>
+                <h5>{{product.price}} VNĐ</h5>
+              </div>
+              <a href="/addtocart/{{ product.id }}">Add to cart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
   <footer class="footer">
     <div>

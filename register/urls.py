@@ -23,4 +23,6 @@ urlpatterns = [
     path('order/', views.order, name="order"),
     path('orderdetail/<int:id>', views.orderdetail, name="orderdetail"),
     path('rating/<int:id>', views.rating, name="rating"),
+    path('productdetail/<int:id>', views.productdetail, name="productdetail"),
+
 ]

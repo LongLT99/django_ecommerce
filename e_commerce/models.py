@@ -197,6 +197,7 @@ class Product(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     product_name = models.CharField(max_length=255, blank=True, null=True)
     product_type = models.CharField(max_length=255, blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     quantity = models.IntegerField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
