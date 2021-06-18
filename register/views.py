@@ -172,7 +172,28 @@ def orderprocess(request, id):
 
 
 def editproduct(request,id):
-    return redirect('../editproduct')
+    if request.session.get('user_id') is None:
+        return redirect('../login')
+    else:
+        get_product = Product.objects.filter(id=id).get()
+        if request.method == 'POST':
+            if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
+                get_product.product_name = request.POST.get('product_name')
+                get_product.quantity = request.POST.get('quantity')
+                get_product.product_type = request.POST.get('product_type')
+                get_product.description = request.POST.get('description')
+                get_product.price = request.POST.get('price')
+                get_product.image = request.POST.get('image_url')
+                if(request.POST.get('publicCheck') == 'on'):
+                    get_product.public = 1
+                else:
+                    get_product.public = 0
+                get_product.save()
+                messages.success(request, "Success")
+                return render(request, "admin/editproduct.html")
+
+        else:
+            return render(request, "admin/editproduct.html", {'product': get_product})
 
 # Customer role
 def customer(request):
