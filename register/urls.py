@@ -15,6 +15,8 @@ urlpatterns = [
     path('employee/order', views.admin_order, name='admin_order'),
     path('employee/orderprocess/<int:id>', views.orderprocess, name="orderprocess"),
     path('employee/editproduct/<int:id>', views.editproduct, name="editproduct"),
+    path('employee/rating', views.adminrating, name="adminrating"),
+    path('employee/ratingprocess/<int:id>', views.ratingprocess, name="ratingprocess"),
 
     # customer
     path('homepage/', views.customer, name='customer'),

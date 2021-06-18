@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product, Rating
+from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product, Rating, Ratingprocess
 from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess, Productrating
 
 
@@ -190,10 +190,37 @@ def editproduct(request,id):
                     get_product.public = 0
                 get_product.save()
                 messages.success(request, "Success")
-                return render(request, "admin/editproduct.html")
-
+                return redirect('../product')
         else:
             return render(request, "admin/editproduct.html", {'product': get_product})
+
+
+def adminrating(request):
+    if request.session.get('user_id') is None:
+        return redirect('../login')
+    get_product_ratings = Productrating.objects.all()
+    return render(request, "admin/productrating.html", {'ratings': get_product_ratings})
+
+
+def ratingprocess(request,id):
+    if request.session.get('user_id') is None:
+        return redirect('../login')
+    get_account = Account.objects.filter(id=request.session['user_id'])
+    account = get_account.get()
+    if(account.role != "0"):
+        return redirect('../login')  
+    get_employee = Employee.objects.filter(accountid = account)
+    employee = get_employee.get()  
+    get_product_rating = Productrating.objects.filter(id = id).get()    
+    if request.method == 'POST':
+        saveratingprocess = Ratingprocess()
+        saveratingprocess.employeeid = employee
+        saveratingprocess.ratingid = get_product_rating.ratingid
+        saveratingprocess.feedback = request.POST.get("feedback")
+        saveratingprocess.save()
+        messages.success(request, "Success")
+    return render(request, "admin/ratingprocess.html", {'productrating': get_product_rating})
+
 
 # Customer role
 def customer(request):
