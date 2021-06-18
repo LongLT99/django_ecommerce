@@ -98,6 +98,7 @@ def add_product(request):
                 saveproduct.product_name = request.POST.get('product_name')
                 saveproduct.quantity = request.POST.get('quantity')
                 saveproduct.product_type = request.POST.get('product_type')
+                saveproduct.description = request.POST.get('description')
                 saveproduct.price = request.POST.get('price')
                 saveproduct.image = request.POST.get('image_url')
                 if(request.POST.get('publicCheck') == 'on'):
@@ -231,15 +232,18 @@ def cart(request):
     else:
         get_account = Account.objects.filter(id=request.session['user_id'])
         account = get_account.get()
-        get_customer = Customer.objects.filter(accountid=account)
-        current_customer = get_customer.get()
-        get_cart = Cart.objects.filter(
-            status="onhold", customerid=current_customer)
-        if(get_cart.count() != 0):
-            get_items = Item.objects.filter(cartid=get_cart.get())
-            return render(request, "customer/cart.html", {'items': get_items, 'mycart': get_cart.get()})
+        if account.role == '1':
+            get_customer = Customer.objects.filter(accountid=account)
+            current_customer = get_customer.get()
+            get_cart = Cart.objects.filter(
+                status="onhold", customerid=current_customer)
+            if(get_cart.count() != 0):
+                get_items = Item.objects.filter(cartid=get_cart.get())
+                return render(request, "customer/cart.html", {'items': get_items, 'mycart': get_cart.get()})
+            else:
+                return render(request, "customer/cart.html")
         else:
-            return render(request, "customer/cart.html")
+            return redirect('../login')
 
 
 def confirm(request):
