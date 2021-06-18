@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from e_commerce.models import Account, Employee, Customer, Fullname, Address, Product, Rating
-from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess, Comment, Productrating
+from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess, Productrating
 
 
 # Create your views here.
@@ -332,18 +332,13 @@ def rating(request, id):
             for item in get_items:
                 comment = str(item.id)+'comment'
                 rating = str(item.id)+'rating'
-                # Comment
-                savecomment = Comment()
-                savecomment.descrip = request.POST.get(comment)
-                savecomment.itemid = item
-                savecomment.customerid = current_customer
                 # Rating
                 saverating = Rating()
                 saverating.star = request.POST.get(rating)
+                saverating.comment = request.POST.get(comment)
                 saverating.itemid = item
                 saverating.customerid = current_customer
                 # save
-                savecomment.save()
                 saverating.save()
                 # Productrating
                 savepr = Productrating()
@@ -360,18 +355,15 @@ def rating(request, id):
 def productdetail(request, id):
     get_product = Product.objects.filter(id=id).get()
     get_product_ratings = Productrating.objects.filter(productid=get_product)
-    list_rating = []
-    list_comment = []
     sumrate = 0
+    list_ratings = []
     for rate in get_product_ratings:
         get_rate = rate.ratingid
-        list_rating.append(get_rate)
+        list_ratings.append(get_rate)
         sumrate += get_rate.star
-        get_comment = Comment.objects.filter(id=get_rate.id).get()
-        list_comment.append(get_comment)
     averageRating = 0
     coutrating = 0
-    if len(list_rating) != 0:
-        averageRating = sumrate/len(list_rating)
-        coutrating = len(list_rating)
-    return render(request, "productdetail.html", {'product': get_product, 'ratings': list_rating, 'comments': list_comment, 'averageStar': averageRating, 'count': coutrating})
+    if len(list_ratings) != 0:
+        averageRating = sumrate/len(list_ratings) 
+        coutrating = len(list_ratings) 
+    return render(request, "productdetail.html", {'product': get_product, 'ratings': list_ratings, 'averageStar': averageRating, 'count': coutrating})
