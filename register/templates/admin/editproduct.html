@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .main {
+            margin-left: 160px;
+            /* Same as the width of the sidenav */
+            font-size: 28px;
+            /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Add product</title>
+</head>
+
+<body>
+
+    <div class="sidenav">
+        <a href="../">Home</a>
+        <a href="../product">Product</a>
+        <a href="../order">Order</a>
+        <a href="../login">Log out</a>
+    </div>
+
+    <div class="main">
+        <div class="container">
+            <h1>Add product</h1>
+            {% if messages %}
+            <div class="alert alert-primary" role="alert">
+                Add product Success!!!
+            </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Product's name</label>
+                        <input type="text" class="form-control" id="inputEmail4" placeholder="Name" name="product_name"
+                            required="required">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">Quantity</label>
+                        <input type="number" class="form-control" id="inputPassword4" placeholder="quantity"
+                            name="quantity" required="required">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail5">Product's description</label>
+                        <input type="text" class="form-control" id="inputEmail5" placeholder="description" name="description"
+                            required="required">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">Image link</label>
+                        <input type="text" class="form-control" id="inputCity" name="image_url" required="required">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputState">Type</label>
+                        <select id="inputState" class="form-control" name="product_type">
+                            <option selected>Book</option>
+                            <option>Electronic</option>
+                            <option>Clothes</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputZip">Price</label>
+                        <input type="number" class="form-control" id="inputZip" name="price" required="required">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-check" style="font-size: 15px;">
+                        <input class="form-check-input" type="checkbox" id="gridCheck" name="publicCheck">
+                        <label class="form-check-label" for="gridCheck">
+                            public product
+                        </label>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-secondary" value="Add product">
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

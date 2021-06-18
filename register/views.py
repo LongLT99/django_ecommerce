@@ -171,6 +171,9 @@ def orderprocess(request, id):
             return redirect('../order')
 
 
+def editproduct(request,id):
+    return redirect('../editproduct')
+
 # Customer role
 def customer(request):
     all_product = Product.objects.filter(public=1)
