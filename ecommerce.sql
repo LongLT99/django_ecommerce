@@ -136,10 +136,12 @@ PRIMARY KEY (ID));
 
 INSERT INTO `boec`.`account` (`Username`, `Password`, `Role`) VALUES ('admin', '123456', '0');
 INSERT INTO `boec`.`account` (`Username`, `Password`, `Role`) VALUES ('newguy', '123456', '1');
+INSERT INTO `boec`.`account` (`Username`, `Password`, `Role`) VALUES ('newguy2', '123456', '1');
 
 INSERT INTO `boec`.`fullname` (`FirstName`, `LastName`) VALUES ('Tran', 'Dan');
 INSERT INTO `boec`.`address` (`City`, `District`, `Ward`, `Description`) VALUES ('Ha noi', 'Ha Dong ', 'Duong noi', 'so 100');
 INSERT INTO `boec`.`customer` (`email`, `tel`, `AccountID`, `FullnameID`, `AddressID`) VALUES ('long@mail.com', '0987654321', '2', '1', '1');
+INSERT INTO `boec`.`customer` (`email`, `tel`, `AccountID`, `FullnameID`, `AddressID`) VALUES ('long2@mail.com', '0987654521', '3', '1', '1');
 
 INSERT INTO `boec`.`employee` (`name`, `position`, `AccountID`) VALUES ('Nguyen Tuan', 'admin', '1');
 

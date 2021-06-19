@@ -218,9 +218,14 @@ def ratingprocess(request,id):
         saveratingprocess.ratingid = get_product_rating.ratingid
         saveratingprocess.feedback = request.POST.get("feedback")
         saveratingprocess.save()
-        messages.success(request, "Success")
-    return render(request, "admin/ratingprocess.html", {'productrating': get_product_rating})
-
+        return render(request, "admin/ratingprocess.html", {'productrating': get_product_rating, "ratingprocess": saveratingprocess})
+    else:
+        saveratingprocess = Ratingprocess.objects.filter(ratingid  = get_product_rating.ratingid)
+        if saveratingprocess.count() != 0:
+            process = saveratingprocess.get()
+            return render(request, "admin/ratingprocess.html", {'productrating': get_product_rating,  "ratingprocess": process})
+        else:
+            return render(request, "admin/ratingprocess.html", {'productrating': get_product_rating})
 
 # Customer role
 def customer(request):
