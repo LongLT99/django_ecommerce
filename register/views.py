@@ -5,27 +5,30 @@ from e_commerce.models import Cart, Item, Payment, Shipment, Order, Orderprocess
 
 
 # Create your views here.
+
+# xử lý đăng ký
 def register(request):
     if request.method == 'POST':
         if request.POST.get('username') and request.POST.get('password'):
+            # lưu Fullname
             savefullname = Fullname()
             savefullname.firstname = request.POST.get('firstName')
             savefullname.lastname = request.POST.get('lastName')
             savefullname.save()
-
+            # lưu Account
             saveuser = Account()
             saveuser.username = request.POST.get('username')
             saveuser.password = request.POST.get('password')
             saveuser.role = 1
             saveuser.save()
-
+            # lưu Address
             saveaddress = Address()
             saveaddress.city = request.POST.get('city')
             saveaddress.district = request.POST.get('district')
             saveaddress.ward = request.POST.get('ward')
             saveaddress.description = request.POST.get('description')
             saveaddress.save()
-
+            # add Customer
             savecustomer = Customer()
             savecustomer.accountid = saveuser
             savecustomer.fullnameid = savefullname
@@ -33,7 +36,6 @@ def register(request):
             savecustomer.email = request.POST.get('email')
             savecustomer.tel = request.POST.get('tel')
             savecustomer.save()
-
             messages.success(request, "Success")
             return render(request, "register.html")
 
@@ -43,6 +45,7 @@ def register(request):
 
 def login(request):
     if request.method == 'POST':
+        # xử lý logic
         get_user = Account.objects.filter(username=request.POST.get('username'),
                                           password=request.POST.get('password')).count()
         user = Account.objects.filter(username=request.POST.get(
@@ -66,9 +69,8 @@ def homepage(request):
     all_product = Product.objects.filter(public=1)
     return render(request, "homepage.html", {'products': all_product})
 
+
 # Employee role
-
-
 def admin(request):
     if request.session.get('user_id') is None:
         return redirect('../login')
@@ -84,6 +86,7 @@ def admin(request):
 def product(request):
     if request.session.get('user_id') is None:
         return redirect('../login')
+    # list Product
     all_product = Product.objects.all()
     return render(request, "admin/product.html", {'products': all_product})
 
@@ -94,6 +97,7 @@ def add_product(request):
     else:
         if request.method == 'POST':
             if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
+                # add Product
                 saveproduct = Product()
                 saveproduct.product_name = request.POST.get('product_name')
                 saveproduct.quantity = request.POST.get('quantity')
@@ -116,6 +120,7 @@ def add_product(request):
 def admin_order(request):
     if request.session.get('user_id') is None:
         return redirect('../login')
+    # list all Order
     all_order = Order.objects.all()
     return render(request, "admin/adminorder.html", {'orders': all_order})
 
@@ -138,6 +143,7 @@ def orderprocess(request, id):
 
     if(get_process.count() == 0):
         if request.method == 'POST':
+            # add Orderprocess
             saveprocess = Orderprocess()
             saveprocess.employeeid = employee
             saveprocess.orderid = get_order
@@ -155,6 +161,7 @@ def orderprocess(request, id):
             employeeid=employee, orderid=get_order)
         if get_my_process.count() != 0:
             if request.method == 'POST':
+                # add Orderprocess
                 saveprocess = Orderprocess()
                 saveprocess.employeeid = employee
                 saveprocess.orderid = get_order
@@ -178,6 +185,7 @@ def editproduct(request,id):
         get_product = Product.objects.filter(id=id).get()
         if request.method == 'POST':
             if request.POST.get('product_name') and request.POST.get('quantity') and request.POST.get('image_url') and request.POST.get('price'):
+                # update Product
                 get_product.product_name = request.POST.get('product_name')
                 get_product.quantity = request.POST.get('quantity')
                 get_product.product_type = request.POST.get('product_type')
@@ -198,6 +206,7 @@ def editproduct(request,id):
 def adminrating(request):
     if request.session.get('user_id') is None:
         return redirect('../login')
+    # list all rating
     get_product_ratings = Productrating.objects.all()
     return render(request, "admin/productrating.html", {'ratings': get_product_ratings})
 
@@ -213,6 +222,7 @@ def ratingprocess(request,id):
     employee = get_employee.get()  
     get_product_rating = Productrating.objects.filter(id = id).get()    
     if request.method == 'POST':
+        # add Ratingprocess
         saveratingprocess = Ratingprocess()
         saveratingprocess.employeeid = employee
         saveratingprocess.ratingid = get_product_rating.ratingid
@@ -229,6 +239,7 @@ def ratingprocess(request,id):
 
 # Customer role
 def customer(request):
+    # list Product
     all_product = Product.objects.filter(public=1)
     return render(request, "customer/index.html", {'products': all_product})
 
@@ -291,6 +302,7 @@ def cart(request):
         if account.role == '1':
             get_customer = Customer.objects.filter(accountid=account)
             current_customer = get_customer.get()
+            # view cart
             get_cart = Cart.objects.filter(
                 status="onhold", customerid=current_customer)
             if(get_cart.count() != 0):
@@ -324,7 +336,7 @@ def confirm(request):
                 savepayment.payment_type = "thanh toán khi nhận hàng"
             savepayment.price = my_cart.price
             savepayment.save()
-
+            # save Shipment
             saveshipment = Shipment()
             if request.POST.get('checkShipment') == "ship1":
                 saveshipment.shipment_type = "giao hàng nhanh"
@@ -334,7 +346,7 @@ def confirm(request):
                 saveshipment.fee = 0
             saveshipment.addressid = current_customer.addressid
             saveshipment.save()
-
+            # add order
             saveorder = Order()
             saveorder.price = saveshipment.fee + my_cart.price
             saveorder.status = "chờ xác nhận"
@@ -361,6 +373,7 @@ def order(request):
     current_customer = get_customer.get()
     get_carts = Cart.objects.filter(customerid=current_customer)
     list_order = []
+    # list Order
     for cart in get_carts:
         if(cart.status != "onhold"):
             get_order = Order.objects.filter(cartid=cart).get()
@@ -371,6 +384,7 @@ def order(request):
 def orderdetail(request, id):
     if request.session.get('user_id') is None:
         return redirect('../login')
+    # view Order
     get_order = Order.objects.filter(id=id).get()
     get_cart = get_order.cartid
     get_items = Item.objects.filter(cartid=get_cart)
